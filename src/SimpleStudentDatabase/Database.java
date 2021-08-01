@@ -15,7 +15,7 @@ public class Database {
     // Constructor
     public Database() {
         try {
-            this.conn = DriverManager.getConnection("jdbc:sqlite:E:\\Assignment\\BootCamp\\src\\FORMS\\students.db");
+            this.conn = DriverManager.getConnection("jdbc:sqlite:E:\\Assignment\\BootCamp_Java\\Basic_Java_Swing_Forms\\src\\SimpleStudentDatabase\\students.db");
             conn.setAutoCommit(true);
             this.createTable();
         }
@@ -53,6 +53,16 @@ public class Database {
         }
         catch(Exception e) {
             System.out.println("Create Tables : "+e);
+        }
+    }
+
+    public void creatLogin(String r,String p) {
+        try{
+            Statement st = conn.createStatement();
+            st.executeUpdate(String.format("insert into Login(regno,LoginPassword) values('%s','%s')",r,p));
+        }
+        catch(Exception e) {
+            System.out.println("Create : "+e);
         }
     }
 

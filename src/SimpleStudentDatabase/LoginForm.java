@@ -8,8 +8,6 @@ import java.awt.*;
 // This class is generate a UI for the login process
 public class LoginForm {
 
-    // Data Members
-    private Student student;
     private JFrame frame;
     private JPanel spanel,panel;
     private JLabel userName,Password;
@@ -19,7 +17,8 @@ public class LoginForm {
 
     // Constructor
     public LoginForm(Database d) {
-        this.student=null;
+        // Data Members
+        Student student = null;
         this.dbase = d;
         this.prepareInterface();
     }
@@ -60,6 +59,14 @@ public class LoginForm {
     // This function is to add the action listeners to the components
     private void prepareActionListeners() {
         this.login.addActionListener(e -> this.signIn());
+        this.home.addActionListener(e -> {
+            new Home(this.dbase);
+            this.frame.dispose();
+        });
+        this.signup.addActionListener(e->{
+            new RegistrationForm(this.dbase);
+            this.frame.dispose();
+        });
     }
 
     // This function is to initialize and customize the text fields

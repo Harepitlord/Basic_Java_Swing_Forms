@@ -85,7 +85,7 @@ public class DeleteForm {
 
         this.panel.setBackground(Color.white);
         this.panel.setLayout(new GridLayout(8,1,20,20));
-        this.panel.setBounds(100,50,150,250);
+        this.panel.setBounds(30,30,150,250);
         this.panel.setBorder(new EmptyBorder(new Insets(10,10,10,10)));
     }
 

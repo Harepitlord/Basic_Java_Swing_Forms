@@ -2,7 +2,7 @@ package SimpleStudentDatabase;
 
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.sql.Date;
 
 // Student class is to create a template object which will be useful for handling data in forms and database
 public class Student {
@@ -33,14 +33,16 @@ public class Student {
         public Student(ResultSet set) {
                 try {
                         this.RegNo = set.getString("regno");
-                        this.Name = set.getString("name");
-                        this.Dept = set.getString("dept");
+                        this.Name = set.getString("Studentname");
+                        this.Dept = set.getString("department");
                         this.YrOfStudy = set.getInt("YearOfStudy");
-                        this.email = new Email(set.getString("email"));
-                        this.dob = new Date(set.getString("Dob"));
+                        this.email = new Email(set.getString("Email"));
+                        this.dob = set.getDate("Dob");
+
                 }
                 catch(Exception e) {
                         System.out.println("Student Constructor : "+e);
+
                 }
 
         }
@@ -93,7 +95,7 @@ public class Student {
 
         public void setDOB(String s) {
                 try {
-                        this.dob = new SimpleDateFormat("dd/MM/yyyy").parse(s);
+                        this.dob = Date.valueOf(s);
                 }
                 catch(Exception e) {
                         System.out.println("setDOB : "+e);
@@ -104,15 +106,16 @@ public class Student {
 
         public String getInsertQuery() {
                 return String.format("insert into Student(RegNo,StudentName,Department,YearOfStudy,Email,Dob) " +
-                        "values( %s,%s,%s,%s,%s,%s);",this.RegNo,this.Name,this.Dept, this.YrOfStudy,this.getEmail(),this.dob);
+                        "values( '%s','%s','%s','%s','%s','%s');",this.RegNo,this.Name,this.Dept, this.YrOfStudy,
+                        this.getEmail(),this.dob);
         }
 
         public String getUpdateQuery() {
-                return String.format("update Student set StudentName = %s,Department = %s ,YearOfStudy = %s,Email = %s"+
-                        "DOb = %s where RegNo = %s ;",this.Name,this.Dept, this.YrOfStudy,this.getEmail(),this.RegNo,this.dob);
+                return String.format("update Student set StudentName = '%s',Department = '%s' ,YearOfStudy = '%s',Email = '%s'"+
+                        ",DOb = '%s' where RegNo = '%s' ;",this.Name,this.Dept, this.YrOfStudy,this.getEmail(),this.RegNo,this.dob);
         }
 
         public String getDeleteQuery() {
-                return String.format("delete from Student where RegNo = %s;",this.RegNo);
+                return String.format("delete from Student where RegNo = '%s';",this.RegNo);
         }
 }

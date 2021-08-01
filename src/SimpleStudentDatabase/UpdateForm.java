@@ -9,7 +9,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.sql.Date;
 import java.util.Properties;
 
 // This class is to generate update form UI
@@ -25,7 +25,7 @@ public class UpdateForm {
     private JTextField RegNo,Name,Emails;
     private JComboBox<String> YrOfStudy,Dept;
     private JDatePickerImpl datePicker;
-    private JButton submit;
+    private JButton submit,home;
 
     // Constructor
     public UpdateForm(Student s,Database d) {
@@ -39,7 +39,7 @@ public class UpdateForm {
         UtilDateModel model = new UtilDateModel();
         Date a =null;
         try {
-            a = new SimpleDateFormat("dd/MM/yyyy").parse(this.student.getDOB());
+            a = Date.valueOf(this.student.getDOB());
         }
         catch(Exception ex) {
             System.out.println("prepareInterface : "+ex);
@@ -83,6 +83,7 @@ public class UpdateForm {
         this.panel.add(this.dob);
         this.panel.add(this.datePicker);
         this.panel.add(this.submit);
+        this.panel.add(this.home);
 
         this.spanel.add(this.panel);
         this.frame.add(this.spanel);
@@ -91,6 +92,10 @@ public class UpdateForm {
     // This function is to add action listeners to their components
     private void prepareActionListeners() {
         this.submit.addActionListener(e -> this.update());
+        this.home.addActionListener(e -> {
+            new Home(this.student,this.dbase);
+            this.frame.dispose();
+        });
     }
 
     // This function is to initialize and customize the buttons
@@ -98,6 +103,10 @@ public class UpdateForm {
         this.submit = new JButton("Submit");
         this.submit.setForeground(Color.white);
         this.submit.setBackground(Color.blue);
+
+        this.home = new JButton("Home");
+        this.home.setForeground(Color.white);
+        this.home.setBackground(Color.blue);
     }
 
     // This function is to initialize and customize the labels
@@ -120,7 +129,7 @@ public class UpdateForm {
         this.Emails = new JTextField();
         this.YrOfStudy = new JComboBox<>(st);
 
-        this.regNo.setText(this.student.getRegNo());
+        this.RegNo.setText(this.student.getRegNo());
         this.Name.setText(this.student.getName());
         this.Dept.setSelectedItem(this.student.getDept());
         this.Emails.setText(this.student.getEmail());
@@ -135,11 +144,11 @@ public class UpdateForm {
         this.spanel.setBackground(Color.white);
         this.spanel.setLayout(null);
         this.spanel.setBorder(new LineBorder(Color.BLACK,2));
-        this.spanel.setBounds(50,50,500,600);
+        this.spanel.setBounds(50,50,650,600);
 
         this.panel.setBackground(Color.white);
         this.panel.setLayout(new GridLayout(8,1,20,20));
-        this.panel.setBounds(100,50,400,500);
+        this.panel.setBounds(100,50,550,500);
         this.panel.setBorder(new EmptyBorder(new Insets(10,10,10,10)));
     }
 
@@ -147,7 +156,7 @@ public class UpdateForm {
     private void prepareFrames() {
         this.frame = new JFrame("Update Form");
 
-        this.frame.setSize(500,700);
+        this.frame.setSize(700,700);
         this.frame.setLayout(null);
         this.frame.getContentPane().setBackground(Color.blue);
         this.frame.setResizable(true);

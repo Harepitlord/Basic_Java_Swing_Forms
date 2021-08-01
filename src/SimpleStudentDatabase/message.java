@@ -49,8 +49,8 @@ public class message {
     private void prepareFrames() {
         this.frame = new JFrame("Alert");
 
-        this.frame.setSize(150,100);
-        this.frame.setLayout(new FlowLayout());
+        this.frame.setSize(400,200);
+        this.frame.setLayout(new GridLayout(2,1,10,10));
         this.frame.getContentPane().setBackground(Color.WHITE);
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.setVisible(true);

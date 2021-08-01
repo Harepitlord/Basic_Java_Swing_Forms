@@ -2,13 +2,14 @@ package SimpleStudentDatabase;
 
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
-import org.jdatepicker.impl.UtilDateModel;
+import org.jdatepicker.impl.SqlDateModel;
+
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.util.Date;
+import java.sql.Date;
 import java.util.Properties;
 
 
@@ -19,11 +20,11 @@ public class RegistrationForm {
     private final Database dbase;
     private JFrame frame;
     private JPanel spanel,panel;
-    private JLabel regNo,name,dept,yrOfStudy,email,dob;
-    private JTextField RegNo,Name,Emails;
+    private JLabel regNo,name,dept,yrOfStudy,email,dob,password;
+    private JTextField RegNo,Name,Emails,pass;
     private JComboBox<String> YrOfStudy,Dept;
     private JDatePickerImpl datePicker;
-    private JButton submit;
+    private JButton submit,home;
 
 
     // Constructor
@@ -34,7 +35,7 @@ public class RegistrationForm {
 
     // This function is to prepare all UI components
     private void prepareInterface() {
-        UtilDateModel model = new UtilDateModel();
+        SqlDateModel model = new SqlDateModel();
         Properties p = new Properties();
         p.put("text.today", "Today");
         p.put("text.month", "Month");
@@ -69,9 +70,12 @@ public class RegistrationForm {
         this.panel.add(this.YrOfStudy);
         this.panel.add(this.email);
         this.panel.add(this.Emails);
+        this.panel.add(this.password);
+        this.panel.add(this.pass);
         this.panel.add(this.dob);
         this.panel.add(this.datePicker);
         this.panel.add(this.submit);
+        this.panel.add(this.home);
 
         this.spanel.add(this.panel);
         this.frame.add(this.spanel);
@@ -82,11 +86,19 @@ public class RegistrationForm {
         this.submit = new JButton("Submit");
         this.submit.setForeground(Color.white);
         this.submit.setBackground(Color.blue);
+
+        this.home = new JButton("Home");
+        this.home.setForeground(Color.white);
+        this.home.setBackground(Color.blue);
     }
 
     // This function is to add the action listeners to the respective component
     private void prepareActionListeners() {
         this.submit.addActionListener(e -> this.register());
+        this.home.addActionListener(e->{
+            new Home(this.dbase);
+            this.frame.dispose();
+        });
     }
 
     // This function is to initialize and customize the frames
@@ -94,7 +106,7 @@ public class RegistrationForm {
         this.frame = new JFrame("Registration Form");
         this.frame.getContentPane().setBackground(Color.blue);
         this.frame.setLayout(null);
-        this.frame.setSize(500,700);
+        this.frame.setSize(750,750);
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.setVisible(true);
         this.frame.setResizable(true);
@@ -108,7 +120,7 @@ public class RegistrationForm {
         this.spanel.setBackground(Color.white);
         this.spanel.setLayout(null);
         this.spanel.setBorder(new LineBorder(Color.BLACK,2));
-        this.spanel.setBounds(50,50,500,600);
+        this.spanel.setBounds(50,50,600,650);
 
         this.panel.setBackground(Color.white);
         this.panel.setLayout(new GridLayout(8,1,20,20));
@@ -123,17 +135,19 @@ public class RegistrationForm {
         this.dept = new JLabel("Department: ");
         this.yrOfStudy = new JLabel("Year Of Study: ");
         this.email = new JLabel("Email: ");
+        this.password = new JLabel("Password: ");
         this.dob = new JLabel("Date Of Birth: ");
     }
 
     // This function is To initialize and customize the text fields
     private void prepareTextFields() {
-        String[] s = {"I","II","III","IV"};
+        String[] s = {"1","2","3","4"};
         String[] d = {"NONE","CSE","CSBS","EEE","ECE","CIVIL"};
         this.RegNo = new JTextField();
         this.Name = new JTextField();
         this.Dept = new JComboBox<>(d);
         this.Emails = new JTextField();
+        this.pass = new JTextField();
         this.YrOfStudy = new JComboBox<>(s);
 
         this.Dept.setSelectedIndex(0);
@@ -168,6 +182,7 @@ public class RegistrationForm {
         Date d = (Date) this.datePicker.getModel().getValue();
         Student s = new Student(regno,sName,sDept,Integer.parseInt(yr),this.Emails.getText(),d);
         if(this.dbase.insertStudent(s)) {
+            this.dbase.creatLogin(regno,pass.getText());
             new message("Registration successful");
             new Home(s, this.dbase);
             this.frame.dispose();
